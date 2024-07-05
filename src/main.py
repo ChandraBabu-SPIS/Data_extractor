@@ -11,7 +11,7 @@ import re
 from PIL import Image
 from io import BytesIO
 from pdfminer.pdfparser import PSSyntaxError
-from table_extractor.src.start_page_utils import (crop_borders,
+from src.start_page_utils import (crop_borders,
                                to_subscript_formula,
                                get_first_page_details,
                             #    get_structure_img,
@@ -19,12 +19,12 @@ from table_extractor.src.start_page_utils import (crop_borders,
                                process_compounds_section,
                                merge_approval_section)
 
-from table_extractor.src.appearance_utils import (find_appearance_block,
+from src.appearance_utils import (find_appearance_block,
                                 extract_description)
 
-from table_extractor.src.last_page_utils import get_footer_dict, get_last_page_data
+from src.last_page_utils import get_footer_dict, get_last_page_data
 
-from table_extractor.src.revision_history_utils import extract_revision_history
+from src.revision_history_utils import extract_revision_history
 
 
 formula = "C23H23ClFNO5"
