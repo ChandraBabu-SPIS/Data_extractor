@@ -1,0 +1,9 @@
+pandas
+numpy
+pdfplumber
+#pdfminer
+decimer_segmentation
+openpyxl
+streamlit
+xlsxwriter
+opencv-python-headless
