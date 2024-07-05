@@ -3,7 +3,7 @@ import pdfplumber
 import numpy as np
 import pandas as pd
 from PIL import Image
-
+import re
 # from decimer_segmentation import segment_chemical_structures
 
 
@@ -75,18 +75,27 @@ def process_compounds_section(lines):
 #         return img
 
 def get_first_page_details(pdf):
-    text = pdf.pages[0].extract_text(y_tolerance = 6,  # to keep the formula intact
-                                     x_tolerance=6)
+    text = pdf.pages[0].extract_text(y_tolerance=6, x_tolerance=6)
     sample_dict = {}
 
     for row in text.split("\n"):
         if ":" in row:
             try:
                 key, val = row.split(":")
-            except:
-                pass
-            if len(key)>1 and len(val)>1:
-                sample_dict[key] = val
+                if len(key.strip()) > 1 and len(val.strip()) > 1:
+                    sample_dict[key.strip()] = val.strip()
+            except Exception as e:
+                print(f"Error processing row: {row}. Error: {e}")
+
+    for key in sample_dict:
+        val = sample_dict[key]
+        if key == 'MOLECULAR WEIGHT':
+            val = re.sub(r'\b[A-Z]+\s+\d+\b', '', val).strip()
+        else:
+            val = re.sub(r'[A-Z\s]+$', '', val).strip()
+
+        sample_dict[key] = val  # Update the value in sample_dict
+
     return sample_dict
 
 
