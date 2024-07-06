@@ -121,7 +121,7 @@ def extract_from_document(file):
 
         def extract_parts(description):
             # Regex pattern to match revision and author
-            pattern = r'(\d{4}\.\d{2})\s+(\b[A-Z]\. [A-Z][a-zA-Z]*\b)([^\d]*)'
+            pattern = r'(\d{4}\.\d{2})\s+(\b[A-Z]\. [A-Z][a-zA-Z]*\b)([\s\S]*?)(?=\d{4}\.\d{2}\s+\b[A-Z]\. [A-Z][a-zA-Z]*\b|$)'
             matches = re.findall(pattern, description)
             
             result = []
