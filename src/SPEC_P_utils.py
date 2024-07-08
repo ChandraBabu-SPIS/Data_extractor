@@ -7,7 +7,7 @@ from PIL import Image
 from IPython.display import HTML
 import os
 
-
+import io
 
 def get_image_size(image):
     with io.BytesIO() as buffer:
