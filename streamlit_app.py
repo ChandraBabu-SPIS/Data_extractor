@@ -8,7 +8,7 @@ from src.SPEC_P_utils import extract_spec_images
 from pdfminer.pdfparser import PSSyntaxError
 import zipfile
 
-st.title('Soulpage IT')
+st.title('Devfi,Inc')
 st.subheader("Data Extraction Demo")
 
 # Section for general PDF processing
