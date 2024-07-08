@@ -3,7 +3,7 @@ import pandas as pd
 import numpy as np
 
 from PIL import Image
-from decimer_segmentation import segment_chemical_structures, segment_chemical_structures_from_file
+from decimer_segmentation import segment_chemical_structures
 from IPython.display import HTML
 import os
 
