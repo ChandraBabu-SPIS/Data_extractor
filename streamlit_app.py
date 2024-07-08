@@ -23,7 +23,7 @@ doc_type = st.radio(
 
 
 if doc_type =="Quality Specification":
-    st.header("Quality Specification PDF Processing")
+    st.header("Quality Specification PDF")
     uploaded_file = st.file_uploader("Choose a file", type="pdf", key="Quality Specification")
     if uploaded_file is not None:
         st.write("File uploaded")
@@ -67,7 +67,7 @@ if doc_type =="Quality Specification":
 
 elif doc_type =="Raw Material":
 
-    st.header("Raw Material PDF Processing")
+    st.header("Raw Material PDF")
     uploaded_spec_p_file = st.file_uploader("Choose a SPEC P file", type="pdf", key="spec_p_pdf")
     if uploaded_spec_p_file is not None:
         st.write("SPEC P File uploaded")
