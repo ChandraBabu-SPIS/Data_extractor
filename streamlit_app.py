@@ -3,10 +3,10 @@ import os
 import pandas as pd
 import streamlit as st
 import pdfplumber
-from src.main import extract_from_document
+from src.main import extract_from_document,extract_spec_p_info,extract_spec_images
 from pdfminer.pdfparser import PSSyntaxError
-from src.SPEC_P_utils import extract_spec_p_info,extract_spec_images
 import zipfile
+
 st.title('Soulpage IT')
 st.subheader("Data Extraction Demo")
 
@@ -49,7 +49,11 @@ if uploaded_file is not None:
             st.write(f"An error occurred while processing file {uploaded_file.name}: {e}")     
     else:
         st.write("Couldn't Process the File. Upload proper File.")
+        
 # Section for SPEC P PDF processing
+
+
+
 st.header("SPEC P PDF")
 uploaded_spec_p_file = st.file_uploader("Choose a SPEC P file", type="pdf", key="spec_p_pdf")
 if uploaded_spec_p_file is not None:
