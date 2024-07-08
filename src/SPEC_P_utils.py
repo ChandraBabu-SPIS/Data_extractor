@@ -7,6 +7,14 @@ from PIL import Image
 from IPython.display import HTML
 import os
 
+
+
+def get_image_size(image):
+    with io.BytesIO() as buffer:
+        image.save(buffer, format="PNG")
+        image_size = buffer.tell() / 1024  # Convert to KB
+    return image_size
+    
 def get_first_page_details1(pdf):
     text = pdf.pages[0].extract_text(x_tolerance=5, y_tolerance=5)
     sample_dict = {}
