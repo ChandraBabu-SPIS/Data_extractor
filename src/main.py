@@ -70,7 +70,7 @@ def extract_from_document(file):
         df_result1 = pd.json_normalize(result1)
 
         # Concatenate the DataFrames
-        final_df = pd.concat([df_result, df_result1, df_first_data], axis=1)
+        final_df = pd.concat([ df_result1, df_first_data], axis=1)
         final_df.fillna(' ', inplace=True)
         
 
