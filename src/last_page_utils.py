@@ -26,14 +26,19 @@ def get_footer_dict(lines):
 
 
 
-def get_last_page_data1(pdf):
+def get_last_page_data(pdf):
     last_page = pdf.pages[-1].within_bbox((30,0,pdf.pages[0].width-10, 700))
     if last_page.find_tables():
         table = last_page.extract_table()
-        df = pd.DataFrame(table, columns= ["Title", "Document Type", "Author", "Department", "Effective Date","Status"])
+        try:
+            df = pd.DataFrame(table, columns= ["Title", "Document Type", "Author", "Department", "Effective Date","Status"])
         # print("table:", table)
         # print("\n")
         # print(df)
+        except ValueError as e:
+            #print(f"Error creating DataFrame with table data: {e}")
+            #print(f"Table data: {table}")
+            df = pd.DataFrame()
     else:
         # extract all text from page
         gs_data = {}
@@ -65,16 +70,16 @@ def get_last_page_data1(pdf):
                 gs_data["Effective Date"] = effective_date.split("Effective Date:")[1].strip()
                 gs_data["Status"] = status.strip()
         #print(gs_data)
-       # ["Approved by","Date", , "Document Type", "Author", "Department", "Effective Date","Status"])
-    df = pd.DataFrame({
-            "Title": [gs_data.get("Title", "")] ,
-            "Document Type": [gs_data.get("Document Type", "")] ,
-            "Author": [gs_data.get("Author", "")] ,
-            "Department": [gs_data.get("Department", "")] ,
-            "Effective Date": [gs_data.get("Effective Date", "")] ,
-            "Status": [gs_data.get("Status", "")] 
-        })
-    return df
+        # ["Approved by","Date", , "Document Type", "Author", "Department", "Effective Date","Status"])
+        df = pd.DataFrame({
+                "Title": [gs_data.get("Title", "")] ,
+                "Document Type": [gs_data.get("Document Type", "")] ,
+                "Author": [gs_data.get("Author", "")] ,
+                "Department": [gs_data.get("Department", "")] ,
+                "Effective Date": [gs_data.get("Effective Date", "")] ,
+                "Status": [gs_data.get("Status", "")] 
+            })
+        return df
 
 if __name__=="__main__":
     file = "D:\Purna_Office\Soulpage_New\Task-50_0_GILEAD\Extended_POC_2\SPEC-0012 Elvitegravir Drug Substance.pdf"
