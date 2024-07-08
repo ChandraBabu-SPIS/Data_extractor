@@ -197,7 +197,7 @@ def get_last_page_data(pdf):
             })
         return df
 
-def extract_spec_images(pdf, output_dir='output_images'):
+def extract_spec_images(pdf, output_dir='output_images', min_image_size_kb=12, min_width=None, min_height=None):
     if not os.path.exists(output_dir):
         os.makedirs(output_dir)
 
@@ -218,6 +218,22 @@ def extract_spec_images(pdf, output_dir='output_images'):
 
             # Convert cropped image to PIL image
             pil_image = cropped_image.original
+
+            # Check image size
+            image_size_kb = get_image_size(pil_image)
+            if image_size_kb < min_image_size_kb:
+                print(f"Ignoring image {image_index + 1} on page {page_number + 1} due to size ({image_size_kb:.2f} KB)")
+                continue
+
+            # Optionally, you can filter images based on minimum width or height
+            if min_width and pil_image.width < min_width:
+                print(f"Ignoring image {image_index + 1} on page {page_number + 1} due to width ({pil_image.width}px)")
+                continue
+
+            if min_height and pil_image.height < min_height:
+                print(f"Ignoring image {image_index + 1} on page {page_number + 1} due to height ({pil_image.height}px)")
+                continue
+
             images_on_page.append(pil_image)
 
         # If there are multiple images on a page, merge them into a single image
@@ -238,14 +254,13 @@ def extract_spec_images(pdf, output_dir='output_images'):
 
         # Add the images to the list and save them to the output directory
         for img in images_on_page:
-            image_path = os.path.join(output_dir, f'page_{page_number + 1}_image_{image_index + 1}.png')
+            image_path = os.path.join(output_dir, f'page_{page_number + 1}image{image_index + 1}.png')
             img.save(image_path)
             data.append({'page_number': page_number + 1, 'image_path': image_path, 'image': img})
 
     # Create the DataFrame from the list of dictionaries
     df = pd.DataFrame(data)
-    
-    return df
 
+    return df
 
 
