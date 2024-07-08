@@ -4,10 +4,10 @@ import numpy as np
 
 from PIL import Image
 from decimer_segmentation import segment_chemical_structures, segment_chemical_structures_from_file
-
+from IPython.display import HTML
 import os
 
-def get_first_page_details(pdf):
+def get_first_page_details1(pdf):
     text = pdf.pages[0].extract_text(x_tolerance=5, y_tolerance=5)
     sample_dict = {}
 
@@ -35,7 +35,7 @@ def get_appearance_block(table):
     df = pd.DataFrame(new_table[1:], columns=["SPECIFICATION","METHOD"])
     return df
 
-def find_appearance_block(pdf):
+def find_appearance_block1(pdf):
     line_identifier1 = "METHOD"
 
     specification_df = pd.DataFrame()
@@ -72,7 +72,7 @@ def find_appearance_block(pdf):
     return specification_df
 
 
-def get_revision_history(pdf):
+def get_revision_history1(pdf):
     revision_hisory_df = pd.DataFrame()
     for page in pdf.pages:
         pg_text = page.extract_text()
@@ -98,7 +98,7 @@ def get_revision_history(pdf):
     return revision_hisory_df
 
 
-def get_other_tables(pdf):
+def get_other_tables1(pdf):
     other_dfs = []
     col_no = 0
     for page in pdf.pages[:-1]:
@@ -218,34 +218,4 @@ def extract_spec_images(pdf, output_dir='output_images'):
     return df
 
 
-
-
-def extract_spec_p_info(file):
-    #file_name = file
-    #output_file = os.path.splitext(file_name)[0]+".xlsx"
-    pdf = pdfplumber.open(file)
-
-    # img = get_structure_img(file)
-
-    sample_dict = get_first_page_details(pdf)
-    sample_df=  pd.DataFrame(sample_dict, index=[0])
-
-    appearance_df = find_appearance_block(pdf)
-    revision_df = get_revision_history(pdf)
-
-    other_dfs = get_other_tables(pdf)
-    approval_df = get_last_page_data(pdf)
-    images_df=extract_spec_images(pdf)
-
-    all_dataframes = [sample_df, 
-                    appearance_df, images_df,
-                    revision_df, ]+other_dfs+[approval_df]
-
-    final_df = pd.concat(all_dataframes, axis=1)
-
-    # saving to local
-    #final_df.to_excel(output_file)
-
-    # returning to user to download
-    return final_df #, output_file
 
