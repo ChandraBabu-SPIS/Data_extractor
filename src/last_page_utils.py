@@ -25,34 +25,56 @@ def get_footer_dict(lines):
 
 
 
+
 def get_last_page_data(pdf):
     last_page = pdf.pages[-1].within_bbox((30,0,pdf.pages[0].width-10, 700))
     if last_page.find_tables():
         table = last_page.extract_table()
-        df = pd.DataFrame(table, columns= ["Approved by","Date"])
+        df = pd.DataFrame(table, columns= ["Title", "Document Type", "Author", "Department", "Effective Date","Status"])
         # print("table:", table)
         # print("\n")
         # print(df)
     else:
         # extract all text from page
+        gs_data = {}
         texts = last_page.extract_text_simple()
         texts = texts.split("\n")
-        approvals = []
-        dates = []
-        for text in texts:
-            if "date" and "approv" in text.lower():
-                if "Date" in text:
-                    # print(text.split("Date"))
-                    col1, col2 = text.split("Date")
-                    approvals.append(col1)
-                    dates.append(col2)
-            else:
-                pass
-                # print(text)
-        df = pd.DataFrame({"Approved by":approvals, "Date":dates})
-        # print(df)
-    return df
+        
 
+
+        #print(texts)
+        for text in texts:
+        
+            if "Title:" in text:
+                if "Title" not in gs_data.keys():
+                    #print("hee")
+                    
+                # else:
+                    gs_data["Title"] = text.split("Title:")[1].strip()
+                #print(gs_data)
+            elif "Document Type" in text:
+                gs_data["Document Type"] = text.split("Document Type:")[1].strip()
+            elif "Author:" in text and "Department:" in text:
+                author, department = text.split("Department:")
+                gs_data["Author"] = author.split("Author:")[1].strip()
+                print(department)
+                gs_data["Department"] = department.strip()
+                
+            elif "Effective Date:" in text and "Status:" in text:
+                effective_date, status = text.split("Status:")
+                gs_data["Effective Date"] = effective_date.split("Effective Date:")[1].strip()
+                gs_data["Status"] = status.strip()
+        #print(gs_data)
+       # ["Approved by","Date", , "Document Type", "Author", "Department", "Effective Date","Status"])
+    df = pd.DataFrame({
+            "Title": [gs_data.get("Title", "")] ,
+            "Document Type": [gs_data.get("Document Type", "")] ,
+            "Author": [gs_data.get("Author", "")] ,
+            "Department": [gs_data.get("Department", "")] ,
+            "Effective Date": [gs_data.get("Effective Date", "")] ,
+            "Status": [gs_data.get("Status", "")] 
+        })
+    return df
 
 if __name__=="__main__":
     file = "D:\Purna_Office\Soulpage_New\Task-50_0_GILEAD\Extended_POC_2\SPEC-0012 Elvitegravir Drug Substance.pdf"
