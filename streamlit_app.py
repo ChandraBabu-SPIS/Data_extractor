@@ -3,7 +3,8 @@ import os
 import pandas as pd
 import streamlit as st
 import pdfplumber
-from src.main import extract_from_document,extract_spec_p_info,extract_spec_images
+from src.main import extract_from_document,extract_spec_p_info
+from src.SPEC_P_utils import extract_spec_images
 from pdfminer.pdfparser import PSSyntaxError
 import zipfile
 
