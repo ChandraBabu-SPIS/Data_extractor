@@ -205,7 +205,7 @@ def get_last_page_data(pdf):
             })
         return df
 
-def extract_spec_images(pdf, output_dir='output_images', min_image_size_kb=12, max_image_size_kb=170 min_width=None, min_height=None):
+def extract_spec_images(pdf, output_dir='output_images', min_image_size_kb=12,  min_width=None, min_height=None):
     if not os.path.exists(output_dir):
         os.makedirs(output_dir)
 
@@ -229,7 +229,7 @@ def extract_spec_images(pdf, output_dir='output_images', min_image_size_kb=12, m
 
             # Check image size
             image_size_kb = get_image_size(pil_image)
-            if image_size_kb < min_image_size_kb or image_size_kb > max_image_size_kb:
+            if image_size_kb < min_image_size_kb:
                 print(f"Ignoring image {image_index + 1} on page {page_number + 1} due to size ({image_size_kb:.2f} KB)")
                 continue
 
