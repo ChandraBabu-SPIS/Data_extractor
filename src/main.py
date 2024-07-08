@@ -5,8 +5,9 @@ import numpy as np
 import pandas as pd
 import pdfplumber
 import re
+from decimer_segmentation import segment_chemical_structures, segment_chemical_structures_from_file
 
-
+import zipfile
 
 from PIL import Image
 from io import BytesIO
@@ -26,6 +27,8 @@ from src.last_page_utils import get_footer_dict, get_last_page_data
 
 from src.revision_history_utils import extract_revision_history
 
+from src.SPEC_P_utils import extract_spec_p_info,extract_spec_images
+
 
 formula = "C23H23ClFNO5"
 formatted_formula = to_subscript_formula(formula)
@@ -39,8 +42,8 @@ def extract_from_document(file):
     if test_text:
 
         #### For TOP section in First page
-        first_pg_top_sec_dict = get_first_page_details(pdf)
-        first_pg_top_sec_df = pd.DataFrame([first_pg_top_sec_dict])
+        first_data = get_first_page_details(pdf)
+        
         
         #### For Chemical Structure
         # structure_img = get_structure_img(pdf)
@@ -50,19 +53,27 @@ def extract_from_document(file):
         # structure_df = pd.DataFrame({'Image': [img_str]})
 
         #### For CENTER section in First page
-        page = pdf.pages[0]
-        rows = page.extract_table(table_settings={"horizontal_strategy": "lines"})
-
-        compounds_section = rows[0][0]
-        #approvals_section = rows[1]
+       
 
         ### For Compunds section in First page
-        comp_lines = compounds_section.split("\n") # If comp_lines is empty
+        page = pdf.pages[0]
+        rows = page.extract_table(table_settings={"horizontal_strategy": "lines"})
+        compounds_section = rows[0][0]
+        approvals_section = rows[1]
+        comp_lines = compounds_section.split("\n")
         comp_lines = merge_compund_section(comp_lines)
-        first_pg_center_sec_dict = process_compounds_section(comp_lines)
-        # Removes duplicates from topsection and centersection of page1
-        first_pg_dict = {**first_pg_top_sec_dict, **first_pg_center_sec_dict}
-        first_pg_center_sec_df = pd.DataFrame([first_pg_dict])
+        result = process_compounds_section(comp_lines)
+        result1 = merge_approval_section(approvals_section)
+
+        # Convert results to DataFrame
+        df_result = pd.DataFrame([result])
+        df_first_data = pd.DataFrame([first_data])
+        df_result1 = pd.json_normalize(result1)
+
+        # Concatenate the DataFrames
+        final_df = pd.concat([df_result, df_result1, df_first_data], axis=1)
+        final_df.fillna(' ', inplace=True)
+        
 
 
         ### For Approval section in First Page
@@ -121,8 +132,9 @@ def extract_from_document(file):
 
         def extract_parts(description):
             # Regex pattern to match revision and author
-            pattern = r'(\d{4}\.\d{2})\s+(\b[A-Z]\. [A-Z][a-zA-Z]*\b)([\s\S]*?)(?=\d{4}\.\d{2}\s+\b[A-Z]\. [A-Z][a-zA-Z]*\b|$)'
+            pattern =   r'(\d{4}\.\d{2}|SPEC-[^\d]*\d{4}-\s+\d{3}\.\d{2})\s+(\b[A-Z]\. [A-Z][a-zA-Z]*\b)([\s\S]*?)(?=\d{4}\.\d{2}|SPEC-[^\d]*\d{4}-\s+\d{3}\.\d{2}|$)'
             matches = re.findall(pattern, description)
+            
             
             result = []
             for match in matches:
@@ -155,10 +167,13 @@ def extract_from_document(file):
         #### For Data in Last pages
         last_pg_df  = get_last_page_data(pdf)
 
+        images_df=extract_spec_images(pdf)
+
         final_result_df = pd.concat([
                                     # first_pg_top_sec_df,
                                     # structure_df, 
-                                    first_pg_center_sec_df,
+                                    final_df,
+                                    images_df,
                                     # first_pg_approvls_sec_df,
                                     appearance_df,
                                     new_df,
@@ -172,20 +187,22 @@ def extract_from_document(file):
     else:
         return None
 
-if __name__=="__main__":
+
+if __name__ == "__main__":
     for file in glob.glob(r"D:\Purna_Office\Soulpage_New\Task-50_0_GILEAD\Extended_POC_2\*.pdf"):
         file_name = os.path.basename(file)
-        excel_file_name = file_name.split(".")[0]+".xlsx"
-        structure_file_name = file_name.split(".")[0]+".png"
+        excel_file_name = file_name.split(".")[0] + ".xlsx"
+        structure_file_name = file_name.split(".")[0] + ".png"
         print(file_name)
 
         if file_name.startswith("SPEC"):
             try:
-                result_df = extract_from_document(file)
+                result_df = extract_from_document(file)  # Replace with your actual function call
                 if result_df is not None:
                     result_df.to_excel(excel_file_name)
+                    # Optionally save the structure image as well
                     # structure_img.save(structure_file_name)
             except PSSyntaxError as e:
                 print(f"PSSyntaxError occurred while processing file {file}: {e}")
             except Exception as e:
-                print(f"An error occurred while processing file {file}: {e}")     
+                print(f"An error occurred while processing file {file}: {e}")
