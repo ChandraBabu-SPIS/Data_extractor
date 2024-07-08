@@ -3,7 +3,7 @@ import pandas as pd
 import numpy as np
 
 from PIL import Image
-from decimer_segmentation import segment_chemical_structures
+#from decimer_segmentation import segment_chemical_structures
 from IPython.display import HTML
 import os
 
@@ -127,7 +127,7 @@ def get_structure_img(file_path):
     pdf = pdfplumber.open(file_path)
     page1  = pdf.pages[0].to_image()
     page1  = np.array(page1.original)
-    segments = segment_chemical_structures(page1, expand= True)
+    #segments = segment_chemical_structures(page1, expand= True)
     # segments = segment_chemical_structures_from_file(file_path, expand=True, poppler_path=None)
     try:
         # Show first segment
