@@ -5,14 +5,11 @@ import numpy as np
 import pandas as pd
 import pdfplumber
 import re
-from decimer_segmentation import segment_chemical_structures, segment_chemical_structures_from_file
-
-import zipfile
 
 from PIL import Image
 from io import BytesIO
 from pdfminer.pdfparser import PSSyntaxError
-from src.start_page_utils import (crop_borders,
+from .start_page_utils import (crop_borders,
                                to_subscript_formula,
                                get_first_page_details,
                             #    get_structure_img,
@@ -20,18 +17,19 @@ from src.start_page_utils import (crop_borders,
                                process_compounds_section,
                                merge_approval_section)
 
-from src.appearance_utils import (find_appearance_block,
+from .appearance_utils import (find_appearance_block,
                                 extract_description)
 
-from src.last_page_utils import get_footer_dict, get_last_page_data
+from .last_page_utils import get_footer_dict, get_last_page_data
 
-from src.revision_history_utils import extract_revision_history
+from .revision_history_utils import extract_revision_history
 
-from src.SPEC_P_utils import extract_spec_p_info,extract_spec_images
-
+from .SPEC_P_utils import extract_spec_images,get_first_page_details1, get_last_page_data,find_appearance_block1,get_revision_history1,get_other_tables1,get_last_page_data,extract_spec_images
 
 formula = "C23H23ClFNO5"
 formatted_formula = to_subscript_formula(formula)
+
+
 
 def extract_from_document(file):
     pdf = pdfplumber.open(file)
@@ -167,13 +165,12 @@ def extract_from_document(file):
         #### For Data in Last pages
         last_pg_df  = get_last_page_data(pdf)
 
-        images_df=extract_spec_images(pdf)
 
         final_result_df = pd.concat([
                                     # first_pg_top_sec_df,
                                     # structure_df, 
                                     final_df,
-                                    images_df,
+                                
                                     # first_pg_approvls_sec_df,
                                     appearance_df,
                                     new_df,
@@ -183,9 +180,43 @@ def extract_from_document(file):
                                     last_pg_df
                                     ], axis=1)
         # return structure_img, final_result_df
+
+
+        
         return final_result_df
     else:
         return None
+
+
+def extract_spec_p_info(file):
+    #file_name = file
+    #output_file = os.path.splitext(file_name)[0]+".xlsx"
+    pdf = pdfplumber.open(file)
+
+    # img = get_structure_img(file)
+
+    sample_dict = get_first_page_details1(pdf)
+    sample_df=  pd.DataFrame(sample_dict, index=[0])
+
+    appearance_df = find_appearance_block1(pdf)
+    revision_df = get_revision_history1(pdf)
+
+    other_dfs = get_other_tables1(pdf)
+    approval_df = get_last_page_data(pdf)
+    images_df=extract_spec_images(pdf)
+
+    all_dataframes = [sample_df, 
+                    appearance_df, images_df,
+                    revision_df, ]+other_dfs+[approval_df]
+
+    final_df = pd.concat(all_dataframes, axis=1)
+
+    # saving to local
+    #final_df.to_excel(output_file)
+
+    # returning to user to download
+    return final_df #, output_file
+
 
 
 if __name__ == "__main__":
