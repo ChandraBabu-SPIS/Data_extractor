@@ -26,7 +26,7 @@ def get_footer_dict(lines):
 
 
 
-def get_last_page_data(pdf):
+def get_last_page_data1(pdf):
     last_page = pdf.pages[-1].within_bbox((30,0,pdf.pages[0].width-10, 700))
     if last_page.find_tables():
         table = last_page.extract_table()
