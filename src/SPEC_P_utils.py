@@ -4,7 +4,7 @@ import numpy as np
 
 from PIL import Image
 from decimer_segmentation import segment_chemical_structures, segment_chemical_structures_from_file
-from IPython.display import HTML
+
 import os
 
 def get_first_page_details(pdf):
