@@ -21,7 +21,7 @@ from .start_page_utils import (crop_borders,
 from .appearance_utils import (find_appearance_block,
                                 extract_description)
 
-from .last_page_utils import get_footer_dict, get_last_page_data
+from .last_page_utils import get_footer_dict, get_last_page_data1
 
 from .revision_history_utils import extract_revision_history
 
