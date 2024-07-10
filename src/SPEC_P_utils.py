@@ -1,7 +1,7 @@
 import pdfplumber
 import pandas as pd
 import numpy as np
-
+import re
 from PIL import Image
 #from decimer_segmentation import segment_chemical_structures
 from IPython.display import HTML
