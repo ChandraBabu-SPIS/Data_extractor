@@ -196,7 +196,7 @@ def extract_spec_p_info(file):
 
     # img = get_structure_img(file)
 
-    sample_dict = get_first_page_details1(pdf)
+    sample_dict = get_first_page_details2(pdf)
     sample_df=  pd.DataFrame(sample_dict, index=[0])
 
     appearance_df = find_appearance_block1(pdf)
