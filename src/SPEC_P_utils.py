@@ -14,7 +14,8 @@ def get_image_size(image):
         image.save(buffer, format="PNG")
         image_size = buffer.tell() / 1024  # Convert to KB
     return image_size
-    
+
+
 def get_first_page_details1(pdf):
     text = pdf.pages[0].extract_text(x_tolerance=5, y_tolerance=5)
     sample_dict = {}
@@ -31,17 +32,18 @@ def get_first_page_details1(pdf):
             key, val = row.split(":")
             if len(key)>1 and len(val)>1:
                 sample_dict[key] = val
-    for key in sample_dict:
-        val = sample_dict[key]
-        if key == 'MOLECULAR WEIGHT':
-            val = re.sub(r'\b[A-Z]+\s+\d+\b', '', val).strip()
-        elif 'MOLECULAR FORMULA' in key:  # Assuming there might be a key like 'MOLECULAR FORMULA'
-            val = re.sub(r'·HCl$', '', val).strip()
-        else:
-            val = re.sub(r'[A-Z\s]+$', ''|·, val).strip()
+        for key in sample_dict:
+            val = sample_dict[key]
+            if key == 'MOLECULAR WEIGHT':
+                val = re.sub(r'\b[A-Z]+\s+\d+\b', '', val).strip()
+            elif 'MOLECULAR FORMULA' in key:  # Assuming there might be a key like 'MOLECULAR FORMULA'
+                val = re.sub(r'·HCl$', '', val).strip()
+            else:
+                val = re.sub(r'[A-Z\s]+$', ''|·, val).strip()
 
         sample_dict[key] = val  # Update the value in sample_dict
     return sample_dict
+
 
 def get_appearance_block(table):
     new_table = []
