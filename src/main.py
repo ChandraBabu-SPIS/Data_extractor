@@ -25,7 +25,7 @@ from .last_page_utils import get_footer_dict, get_last_page_data
 
 from .revision_history_utils import extract_revision_history
 
-from .SPEC_P_utils import extract_spec_images,get_first_page_details1, get_last_page_data,find_appearance_block1,get_revision_history1,get_other_tables1,get_last_page_data,extract_spec_images
+from .SPEC_P_utils import extract_spec_images,get_first_page_details2, get_last_page_data,find_appearance_block1,get_revision_history1,get_other_tables1,get_last_page_data,extract_spec_images
 
 formula = "C23H23ClFNO5"
 formatted_formula = to_subscript_formula(formula)
