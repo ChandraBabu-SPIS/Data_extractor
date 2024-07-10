@@ -35,6 +35,8 @@ def get_first_page_details1(pdf):
         val = sample_dict[key]
         if key == 'MOLECULAR WEIGHT':
             val = re.sub(r'\b[A-Z]+\s+\d+\b', '', val).strip()
+        elif 'MOLECULAR FORMULA' in key:  # Assuming there might be a key like 'MOLECULAR FORMULA'
+            val = re.sub(r'·HCl$', '', val).strip()
         else:
             val = re.sub(r'[A-Z\s]+$', ''|·, val).strip()
 
