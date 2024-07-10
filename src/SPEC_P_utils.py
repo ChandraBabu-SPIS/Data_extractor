@@ -84,7 +84,7 @@ def get_revision_history1(pdf):
     revision_hisory_df = pd.DataFrame()
     for page in pdf.pages:
         pg_text = page.extract_text()
-        if "HISTORY OF REVISIONs" in pg_text or "REVISION HISTORY" in pg_text or "VERSION HISTORY" in pg_text:
+        if "HISTORY OF REVISION" in pg_text or "REVISION HISTORY" in pg_text or "VERSION HISTORY" in pg_text or "Revision" in pg_text:
             # print(page)
             # print(pg_text)
             table = page.extract_table()
