@@ -36,7 +36,7 @@ def get_first_page_details1(pdf):
         if key == 'MOLECULAR WEIGHT':
             val = re.sub(r'\b[A-Z]+\s+\d+\b', '', val).strip()
         else:
-            val = re.sub(r'[A-Z\s]+$', '', val).strip()
+            val = re.sub(r'[A-Z\s]+$', ''|·, val).strip()
 
         sample_dict[key] = val  # Update the value in sample_dict
     return sample_dict
