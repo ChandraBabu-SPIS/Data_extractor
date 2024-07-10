@@ -31,6 +31,14 @@ def get_first_page_details1(pdf):
             key, val = row.split(":")
             if len(key)>1 and len(val)>1:
                 sample_dict[key] = val
+    for key in sample_dict:
+        val = sample_dict[key]
+        if key == 'MOLECULAR WEIGHT':
+            val = re.sub(r'\b[A-Z]+\s+\d+\b', '', val).strip()
+        else:
+            val = re.sub(r'[A-Z\s]+$', '', val).strip()
+
+        sample_dict[key] = val  # Update the value in sample_dict
     return sample_dict
 
 def get_appearance_block(table):
