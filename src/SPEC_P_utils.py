@@ -337,7 +337,7 @@ def get_last_page_data1(pdf):
 #     return df
 
 
-def extract_spec_images(pdf, output_dir='output_images', min_image_size_kb=12,  min_width=None, min_height=None):
+def extract_spec_images(pdf, output_dir='output_images', min_image_size_kb=20,  min_width=None, min_height=None):
     if not os.path.exists(output_dir):
         os.makedirs(output_dir)
 
