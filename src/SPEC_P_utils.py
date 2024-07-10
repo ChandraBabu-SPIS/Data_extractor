@@ -15,31 +15,23 @@ def get_image_size(image):
         image_size = buffer.tell() / 1024  # Convert to KB
     return image_size
     
-
-def get_first_page_details2(pdf):
-    text = pdf.pages[0].extract_text(y_tolerance=6, x_tolerance=6)
+def get_first_page_details1(pdf):
+    text = pdf.pages[0].extract_text(x_tolerance=5, y_tolerance=5)
     sample_dict = {}
 
     for row in text.split("\n"):
-        if ":" in row:
-            try:
-                key, val = row.split(":")
-                if len(key.strip()) > 1 and len(val.strip()) > 1:
-                    sample_dict[key.strip()] = val.strip()
-            except Exception as e:
-                print(f"Error processing row: {row}. Error: {e}")
+        if "VERSION" in row:
+            document_details, sample_dict["VERSION"] = row.split("VERSION:")
+            sample_dict["VERSION"] = sample_dict["VERSION"].strip().split(" ")[0]
+            if "DOCUMENT NO" in document_details:
+                sample_dict["DOCUMENT NO.:"] = document_details.split("DOCUMENT NO.:")[1]
 
-    for key in sample_dict:
-        val = sample_dict[key]
-        if key == 'MOLECULAR WEIGHT':
-            val = re.sub(r'\b[A-Z]+\s+\d+\b', '', val).strip()
-        else:
-            val = re.sub(r'[A-Z\s]+$', '', val).strip()
-
-        sample_dict[key] = val  # Update the value in sample_dict
-
+        elif ":" in row:
+            print("Row", row)
+            key, val = row.split(":")
+            if len(key)>1 and len(val)>1:
+                sample_dict[key] = val
     return sample_dict
-
 
 def get_appearance_block(table):
     new_table = []
