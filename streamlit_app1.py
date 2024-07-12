@@ -100,7 +100,7 @@ elif doc_type == "Raw Material":
                         img_buffer = io.BytesIO()
                         row['image'].save(img_buffer, format="PNG")
                         img_buffer.seek(0)
-                        zf.writestr(f"page_{row['page_number']}_image_{idx + 1}.png", img_buffer.getvalue())
+                        zf.writestr(f"page_{row['image_title']}_image_{idx + 1}.png", img_buffer.getvalue())
                 
                 zip_buffer.seek(0)
                 
