@@ -35,12 +35,25 @@ def get_first_page_details1(pdf):
                 key, val = re.split(split_pattern, row)
                 if len(key)>1 and len(val)>1:
                     sample_dict[key] = val
-        
-    print("sample_di:",sample_dict)
+    ordered_sample_dict={}               
+    if "VERSION" in sample_dict:
+        ordered_sample_dict = {"DOCUMENT NO.:": sample_dict["DOCUMENT NO.:"], "VERSION": sample_dict["VERSION"]}
+        for key, value in sample_dict.items():
+            if key not in ordered_sample_dict:
+                ordered_sample_dict[key] = value
+                
+            print("sample_di:",ordered_sample_dict)
+    else:
+            
+        for key, value in sample_dict.items():
+            if key not in ordered_sample_dict:
+                ordered_sample_dict[key] = value
+                
+            print("sample_di:",ordered_sample_dict)
 
-    for key in sample_dict:
+    for key in ordered_sample_dict:
 
-        val = sample_dict[key]
+        val = ordered_sample_dict[key]
         if "SPEC-P1307" in pdf.stream.name:
             if "SYNONYMS" in key:
                 val='GS-6949-01; LAIE•HCl;\nPropan-2-yl L-Alaninate\nHydrochloride (1:1)'
@@ -59,11 +72,10 @@ def get_first_page_details1(pdf):
             # Find all instances of the pattern in the text
             val = re.findall(pattern, val)[0]
 
-        sample_dict[key] = val  # Update the value in sample_dict
+        ordered_sample_dict[key] = val  # Update the value in sample_dict
 
 
-    return sample_dict
-
+    return ordered_sample_dict
 
 def get_appearance_block(table):
     # new_table = []
