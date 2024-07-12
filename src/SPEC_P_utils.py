@@ -481,9 +481,9 @@ def extract_spec_images(pdf, output_dir='output_images', min_image_size_kb=20,  
             images_on_page = [merged_image]  # Replace images_on_page with the merged image
 
         if "SPEC-P1307" in filename:
-            titles = ['Chemical Formula_', 'Reference Infrared Spectrum (ATR) of L-Alanine Isopropyl Ester Hydrochloride:', 'Reference Proton NMR Spectrum of L-Alanine Isopropyl Ester Hydrochloride:']
+            titles = ['Formula', 'Reference Infrared Spectrum (ATR) of L-Alanine Isopropyl Ester Hydrochloride:', 'Reference Proton NMR Spectrum of L-Alanine Isopropyl Ester Hydrochloride:']
         elif "SPEC-P396" in filename:
-            titles = ['Chemical Formula','Reference Infrared Spectrum of L-Alanine Ethyl Ester Hydrochloride:', 'Reference Proton NMR Spectrum of L-Alanine Ethyl Ester Hydrochloride:']
+            titles = ['Formula','Reference Infrared Spectrum of L-Alanine Ethyl Ester Hydrochloride:', 'Reference Proton NMR Spectrum of L-Alanine Ethyl Ester Hydrochloride:']
         
         for img in images_on_page:
             image_path = os.path.join(output_dir, f'page_{page_number + 1}image{image_index + 1}.png')
