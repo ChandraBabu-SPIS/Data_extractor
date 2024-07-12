@@ -412,6 +412,7 @@ def extract_spec_images(pdf, output_dir='', min_image_size_kb=20,  min_width=Non
     data = []
     bbox_appended = False
     title_l=0
+    filename = pdf.stream.name
     for page_number, page in enumerate(pdf.pages):
         #print(f"Processing page {page_number + 1}/{len(pdf.pages)}...")
 
