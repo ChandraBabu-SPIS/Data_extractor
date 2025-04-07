@@ -9,7 +9,7 @@ import re
 from IPython.display import HTML
 from PIL import Image
 from io import BytesIO
-from pdfminer.pdfparser import PSSyntaxError
+from pdfminer.psparser import PSSyntaxError
 from .start_page_utils import (crop_borders,
                                to_subscript_formula,
                                get_first_page_details,
